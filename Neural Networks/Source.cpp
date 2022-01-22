@@ -25,10 +25,12 @@ void Mat() {
 
 void NN() {
 	int nodesPerLayer[]{ 2,3,3,2 };
-	Net n1(nodesPerLayer, 4);
+	Activation acts[]{ none, relu, sigmoid, sigmoid };
+	Net n1(nodesPerLayer, 4, random, acts); //did not allow me to skip default arg wInit
 	n1.printWeights();
 	double input[]{ 1,2 };
 	n1.feedForward(input);
+	cout << endl;
 	n1.printNodes();
 }
 

@@ -24,12 +24,18 @@
     <ClCompile Include="Net.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Activations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Matrix2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Net.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Activations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

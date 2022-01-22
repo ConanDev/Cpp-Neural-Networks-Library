@@ -139,10 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Activations.h" />
     <ClInclude Include="Matrix2D.h" />
     <ClInclude Include="Net.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Activations.cpp" />
     <ClCompile Include="Matrix2D.cpp" />
     <ClCompile Include="Net.cpp" />
     <ClCompile Include="Source.cpp" />

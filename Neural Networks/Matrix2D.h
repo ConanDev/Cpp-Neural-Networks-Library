@@ -18,6 +18,8 @@ public:
 	void fill(double* data[]);
 	void fill(double* data); //for vector matrices
 	void multiply(Matrix2D& other, Matrix2D& res);
+	void scale(double scalar);
+	void apply(double (*actFn) (double));
 	Matrix2D get();
 	void operator =(Matrix2D& other);
 

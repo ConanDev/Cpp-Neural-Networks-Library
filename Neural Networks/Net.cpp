@@ -4,14 +4,6 @@
 
 using namespace std;
 
-void Net::setRow2Row(double* a, double* b, int length)
-{
-	for (size_t i = 0; i < length; i++)
-	{
-		a[i] = b[i];
-	}
-}
-
 void Net::setRow2Col(double* a, double** b, int col, int length)
 {
 	for (size_t i = 0; i < length; i++)
@@ -66,7 +58,8 @@ void Net::feedForward(double* input)
 	if (input != NULL) {
 		setRow2Row(layers[0], input, inputSize);
 	}
-	for (size_t i = 0; i < numOfLayers - 1; i++)
+	double (*activationFunction) (double);
+	for (size_t i = 0; i < numOfLayers - 1; i++)//you could have used an numOfLayers - 1 array of acts -- redo the whole thing
 	{
 		//inefficient
 		int current = nodesPerLayer[i];
@@ -75,24 +68,57 @@ void Net::feedForward(double* input)
 		weight.fill(weights[i]);
 
 		Matrix2D layer(current, 1);
-		layer.fill(layers[i]);//problem here
-
+		for (size_t n = 0; n < current; n++)
+		{
+			layers[i][n] += biases[i][n];
+		}
+		layer.fill(layers[i]);
+		//activation func
+		Activation currentAct = activations[i];
+		switch (currentAct) {
+		case sigmoid:
+			activationFunction = Sigmoid;
+			break;
+		case relu:
+			activationFunction = Relu;
+			break;
+		default:
+			activationFunction = Identity; //should not be called
+		}
+		if (currentAct != none) {
+			layer.apply(activationFunction);
+			setRow2Col(layers[i], layer.mat, 0, current);
+		}
 		Matrix2D res("Layer " + to_string(i));
 		weight.multiply(layer, res);
+		
 		setRow2Col(layers[i + 1], res.mat, 0, next);
 	}
 	cout << "FeedForward:" << endl;
 	printArray(layers[numOfLayers - 1], outputSize);
 }
 
-Net::Net(int nodesPerLayer[], int numOfLayers, WeightInit wInit) : numOfLayers(numOfLayers)
+Net::Net(int nodesPerLayer[], int numOfLayers, WeightInit wInit, Activation* acts)
+	: numOfLayers(numOfLayers)
 {
 	this->nodesPerLayer = new int[numOfLayers];
 	layers = new double* [numOfLayers];
+	biases = new double* [numOfLayers - 1]; //might want to remove input layer biases
+
+	if (acts != NULL) {
+		activations = new Activation[numOfLayers];
+		setRow2Row(activations, acts, numOfLayers);
+	}
 	for (size_t i = 0; i < numOfLayers; i++)
 	{
 		this->nodesPerLayer[i] = nodesPerLayer[i];
 		layers[i] = new double[nodesPerLayer[i]];
+		biases[i] = new double[nodesPerLayer[i]];
+		//initialize biases
+		for (size_t j = 0; j < nodesPerLayer[i]; j++)
+		{
+			biases[i][j] = rand() % 10; //for demo purposes
+		}
 	}
 	//weights is an array of 2d matrices
 	weights = new double** [numOfLayers];
@@ -149,4 +175,5 @@ Net::~Net()
 	delete[] weights;
 	//layer nodes cardinalities
 	delete[] nodesPerLayer;
+	if (activations != NULL) delete[] activations;
 }

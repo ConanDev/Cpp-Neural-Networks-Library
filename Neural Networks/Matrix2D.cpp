@@ -101,6 +101,28 @@ void Matrix2D::multiply(Matrix2D& other, Matrix2D& dest)
 	dest = res;
 }
 
+void Matrix2D::scale(double scalar)
+{
+	for (size_t i = 0; i < rows; i++)
+	{
+		for (size_t j = 0; j < cols; j++)
+		{
+			mat[i][j] *= scalar;
+		}
+	}
+}
+
+void Matrix2D::apply(double(*actFn)(double))
+{
+	for (size_t i = 0; i < rows; i++)
+	{
+		for (size_t j = 0; j < cols; j++)
+		{
+			mat[i][j] = actFn(mat[i][j]);
+		}
+	}
+}
+
 Matrix2D Matrix2D::get()
 {
 	return Matrix2D(2, 2);
